@@ -1,0 +1,99 @@
+<div class="flex min-h-screen items-center justify-center bg-[#1a2035]">
+  <div class="w-full max-w-md p-8">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-4xl font-bold gradient-text">
+        Todo list
+      </h1>
+      <button mat-icon-button class="icon-button">
+        <mat-icon>dark_mode</mat-icon>
+      </button>
+    </div>
+
+    <div class="flex gap-2 mb-4">
+      <mat-form-field appearance="outline" class="flex-1">
+        <input 
+          matInput 
+          [(ngModel)]="newTodoTitle" 
+          placeholder="Enter your task" 
+          (keyup.enter)="addTodo()"
+          class="input-field"
+        />
+      </mat-form-field>
+      <button 
+        mat-raised-button 
+        (click)="addTodo()" 
+        class="add-button font-medium px-6"
+      >
+        Add
+      </button>
+    </div>
+
+    <div class="flex gap-2 mb-6">
+      <div class="search-container flex-1">
+        <mat-form-field appearance="outline" class="w-full">
+          <input 
+            matInput 
+            [(ngModel)]="searchQuery" 
+            placeholder="Search tasks" 
+            class="input-field search-input"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="task-container p-4 mb-6">
+      <ng-container *ngIf="isLoading">
+        <p class="text-center text-gray-400 py-2">Loading tasks...</p>
+      </ng-container>
+      
+      <ng-container *ngIf="!isLoading && filteredTodos.length > 0">
+        <div 
+          *ngFor="let todo of filteredTodos" 
+          class="task-item pb-4 mb-4 last:pb-0 last:mb-0"
+        >
+          <div class="flex items-center gap-3">
+            <mat-checkbox 
+              [(ngModel)]="todo.completed" 
+              (change)="toggleComplete(todo)"
+            ></mat-checkbox>
+            <span 
+              [ngClass]="{'line-through text-gray-500': todo.completed, 'text-white': !todo.completed}" 
+              class="flex-1"
+            >
+              {{ todo.title }}
+            </span>
+            <div class="flex gap-2">
+              <button 
+                mat-icon-button 
+                (click)="deleteTodo(todo.id)" 
+                class="icon-button h-8 w-8"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button 
+                mat-icon-button 
+                class="icon-button h-8 w-8"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      
+      <ng-container *ngIf="!isLoading && filteredTodos.length === 0">
+        <p class="text-center text-gray-400 py-2">No tasks found</p>
+      </ng-container>
+    </div>
+
+    <div class="flex justify-center">
+      <button 
+        mat-raised-button 
+        (click)="deleteAll()" 
+        class="delete-all-button font-medium px-6"
+      >
+        Delete All
+      </button>
+    </div>
+  </div>
+</div>
